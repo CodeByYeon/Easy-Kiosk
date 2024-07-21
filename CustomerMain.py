@@ -108,14 +108,28 @@ class MainWindow(QMainWindow):
         self.WidgetEatWhere.setFixedSize(480, 700)
 
         self.BtnHere = makeBtn(210, 500, "먹고가기", self.WidgetEatWhere)
-        self.BtnTakeout = makeBtn(210, 500, "포장하기", self.WidgetEatWhere)
         self.BtnHere.setGeometry(25, 140, 200, 500)
+        self.BtnHere.clicked.connect(lambda: self.selectEatWhere("먹고가기"))
+        self.BtnTakeout = makeBtn(210, 500, "포장하기", self.WidgetEatWhere)
         self.BtnTakeout.setGeometry(255, 140, 200, 500)
+        self.BtnTakeout.clicked.connect(lambda: self.selectEatWhere("포장하기"))
+        self.eatWhere = ""
 
     def selectOrderMethod(self, method):
         self.order_method = method  # 선택한 주문 방법 저장
         print(f"선택한 주문 방법: {self.order_method}")  # 콘솔에 출력 (테스트용)
         self.StackWidgetMain.setCurrentWidget(self.WidgetEatWhere)  # 두 번째 페이지로 전환
+
+    def selectEatWhere(self,eatwhere):
+        self.eatWhere = eatwhere
+        print(f"선택한 식사 위치: {self.eatWhere}") # 콘솔에 출력
+        if self.order_method == "음성 주문" :
+            print(f"음성 주문으로 이동합니다.")
+        elif self.order_method == "메뉴 추천" :
+            print(f"메뉴 추천으로 이동합니다.")
+        elif self.order_method == "일반 주문" :
+            print(f"일반 주문으로 이동합니다.")
+
 
     def updateFont(self):
         self.BtnTakeout.setFont(fontMiddle)
@@ -133,6 +147,7 @@ class MainWindow(QMainWindow):
             fontMiddle.setPointSize(fontMiddle.pointSize()+1)
             fontSmall.setPointSize(fontSmall.pointSize()+1)
             self.updateFont()
+
     def decreasefont(self):
         global fontCount
         if fontCount > -5 :
