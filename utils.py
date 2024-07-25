@@ -2,7 +2,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QPushButton, QLabel
 from PyQt5.QtGui import QFont
 
-fontTitle = QFont("SUITE Bold", 35)
+fontTitle = QFont("SUITE Heavy", 35)
 fontMiddle = QFont("SUITE", 25)
 fontSmall = QFont("SUITE", 16)
 fontCount = 0

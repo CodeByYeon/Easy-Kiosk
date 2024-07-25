@@ -4,6 +4,8 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from utils import makeBtn, makeLabel, updateFontSize, setFontCount, getFontCount
+import speech_recognition as sr
+import pyttsx3
 
 class VoiceOrder(QMainWindow):
     def __init__(self):
@@ -40,8 +42,9 @@ class VoiceOrder(QMainWindow):
         self.LabelInfo = makeLabel(440, 100, "주문 시작 버튼을 누르고\n 메뉴 이름을 말씀해주세요.", self.PageVoiceMain)
         self.LabelInfo.setGeometry(20, 200, 440, 100)
 
-        self.BtnBack = makeBtn(60, 60, "홈", self.PageVoiceMain)
+        self.BtnBack = makeBtn(50, 50, "홈", self.PageVoiceMain)
         self.BtnBack.setGeometry(10, 40, 50, 50)
+        self.BtnBack.clicked.connect(self.close)
 
         self.BtnActivate = makeBtn(120, 120, "시작", self.PageVoiceMain)
         self.BtnActivate.setGeometry(180, 430, 120, 120)
