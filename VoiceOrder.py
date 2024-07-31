@@ -1,5 +1,7 @@
 # VoiceOrder.py
 import sys
+import time
+
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -46,11 +48,42 @@ class VoiceOrder(QMainWindow):
         self.BtnBack.setGeometry(10, 40, 50, 50)
         self.BtnBack.clicked.connect(self.close)
 
-        self.BtnActivate = makeBtn(120, 120, "시작", self.PageVoiceMain)
+        self.BtnActivate = makeBtn(120, 120, "", self.PageVoiceMain)
         self.BtnActivate.setGeometry(180, 430, 120, 120)
+        self.BtnActivate.setFlat(1)
+        self.BtnActivate.clicked.connect(self.voiceActivate)
 
+        self.LabelAct = makeLabel(250,80,"버튼을 누르면\n시작합니다.",self.PageVoiceMain)
+        self.LabelAct.setGeometry(115,550,250,80)
+        self.img_token = 0
+        self.voiceImgChange()
         fontTitle, fontMiddle, _ = updateFontSize()
         self.LabelInfo.setFont(fontMiddle)
+
+    def voiceActivate(self):
+        self.listening = False
+        if not self.listening:
+            self.listening = True
+            self.LabelAct.setText("1초 후에\n주문을 시작합니다.")
+            self.repaint()
+            time.sleep(1)
+            self.img_token = 1
+            self.voiceImgChange()
+            mic = sr.Recognizer()
+            with sr.Microphone() as source:
+                print("음성 입력 시작")
+                self.LabelAct.setText("메뉴 이름을\n말씀하세요")
+                self.repaint()
+                audio_data = mic.listen(source)
+                try:
+                    user_input = mic.recognize_google(audio_data,language="ko-KR")
+                    print(user_input)
+                except sr.UnknownValueError:
+                    print("음성 인식 실패")
+            self.listening = False
+            self.img_token = 0
+            self.voiceImgChange()
+
 
     def updateFont(self):
         fontTitle, fontMiddle, fontSmall = updateFontSize()
@@ -75,6 +108,25 @@ class VoiceOrder(QMainWindow):
             fontMiddle.setPointSize(fontMiddle.pointSize() - 1)
             fontSmall.setPointSize(fontSmall.pointSize() - 1)
             self.updateFont()
+
+    def voiceImgChange(self):
+        if self.img_token == 1 :
+            self.LabelAct.setText("지금 말씀하세요!")
+            self.BtnActivate.setStyleSheet(
+                "QPushButton { background-image: url('img/ClientUI/Voice_On.png');"
+                "background-position: center;"
+                "background-repeat: no-repeat;"
+                "background-size: cover; }"
+            )
+
+        elif self.img_token == 0 :
+            self.LabelAct.setText("주문 시작")
+            self.BtnActivate.setStyleSheet(
+                "QPushButton { background-image: url('img/ClientUI/Voice_Off.png');"
+                "background-position: center;"
+                "background-repeat: no-repeat;"
+                "background-size: cover; }"
+            )
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

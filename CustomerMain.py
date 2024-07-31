@@ -16,6 +16,7 @@ class CustomerMain(QMainWindow):
         self.makeStackUI()
 
     def makeStackUI(self):
+        # UI를 스택위젯형태로 생성
         self.WidgetMain = QWidget(self)
         self.setCentralWidget(self.WidgetMain)
         self.WidgetMain.setFixedSize(480, 830)
@@ -35,6 +36,7 @@ class CustomerMain(QMainWindow):
         LabelZoom = makeLabel(105, 30, "글씨 크기", self.WidgetMain)
         LabelZoom.setGeometry(365, 35, 105, 30)
 
+        # 확대, 축소 버튼 만들기
         BtnZoomIn = makezoom("+")
         BtnZoomOut = makezoom("-")
         BtnZoomIn.setGeometry(365, 70, 50, 50)
@@ -68,7 +70,7 @@ class CustomerMain(QMainWindow):
         self.BtnNormalOrder = makeBtn(440, 190, "일반 주문", FrameOrderMethod)
         self.BtnVoiceOrder = makeBtn(440, 190, "음성 주문", FrameOrderMethod)
         self.BtnRecommendOrder = makeBtn(440, 190, "메뉴 추천", FrameOrderMethod)
-
+        # 각 주문방법 버튼 클릭하면 다음단계로 이동
         self.BtnNormalOrder.clicked.connect(lambda: self.selectOrderMethod("일반 주문"))
         self.BtnVoiceOrder.clicked.connect(lambda: self.selectOrderMethod("음성 주문"))
         self.BtnRecommendOrder.clicked.connect(lambda: self.selectOrderMethod("메뉴 추천"))
