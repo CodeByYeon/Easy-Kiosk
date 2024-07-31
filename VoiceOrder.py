@@ -49,16 +49,31 @@ class VoiceOrder(QMainWindow):
         self.BtnBack.clicked.connect(self.close)
 
         self.BtnActivate = makeBtn(120, 120, "", self.PageVoiceMain)
-        self.BtnActivate.setGeometry(180, 430, 120, 120)
+        self.BtnActivate.setGeometry(180, 380, 120, 120)
         self.BtnActivate.setFlat(1)
         self.BtnActivate.clicked.connect(self.voiceActivate)
 
-        self.LabelAct = makeLabel(250,80,"버튼을 누르면\n시작합니다.",self.PageVoiceMain)
-        self.LabelAct.setGeometry(115,550,250,80)
+        self.LabelAct = makeLabel(250,80,"",self.PageVoiceMain)
+        self.LabelAct.setGeometry(115,500,250,80)
         self.img_token = 0
         self.voiceImgChange()
         fontTitle, fontMiddle, _ = updateFontSize()
         self.LabelInfo.setFont(fontMiddle)
+
+        self.LabelOrderCountTotal = makeLabel(200,40,"총 주문 내역 0개",self.PageVoiceMain)
+        self.LabelOrderPriceTotal = makeLabel(100,40,"0원",self.PageVoiceMain)
+        self.LabelOrderPriceTotal.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
+        self.LabelOrderCountTotal.setGeometry(100,660,100,40)
+        self.LabelOrderPriceTotal.setGeometry(340,660,100,40)
+
+        self.BtnShoppingCart = makeBtn(60,60,"쇼핑\n카트",self.PageVoiceMain)
+        self.BtnShoppingCart.setGeometry(20,650,70,70)
+
+        self.BtnCancelOrder = makeBtn(210,70,"전체 취소하기",self.PageVoiceMain)
+        self.BtnCancelOrder.setGeometry(20,740,210,70)
+        self.BtnPurchase = makeBtn(210,70,"결제하기",self.PageVoiceMain)
+        self.BtnPurchase.setGeometry(250,740,210,70)
+
 
     def voiceActivate(self):
         self.listening = False
