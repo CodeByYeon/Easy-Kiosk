@@ -1,13 +1,10 @@
-# VoiceOrder.py
 import sys
 import time
-
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from utils import makeBtn, makeLabel, updateFontSize, setFontCount, getFontCount
 import speech_recognition as sr
-import pyttsx3
 
 class VoiceOrder(QMainWindow):
     def __init__(self):
@@ -22,6 +19,15 @@ class VoiceOrder(QMainWindow):
         self.setCentralWidget(self.PageVoiceMain)
         self.PageVoiceMain.setStyleSheet("background-color: rgb(255,255,255);")
 
+        self.createZoomControls()
+        self.createButtons()
+        self.createLabels()
+        self.createOrderSummary()
+
+        fontTitle, fontMiddle, _ = updateFontSize()
+        self.LabelInfo.setFont(fontMiddle)
+
+    def createZoomControls(self):
         def makezoom(text):
             btn = QPushButton()
             btn.setFixedSize(50, 50)
@@ -41,9 +47,15 @@ class VoiceOrder(QMainWindow):
         BtnZoomIn.clicked.connect(self.increasefont)
         BtnZoomOut.clicked.connect(self.decreasefont)
 
+    def createLabels(self):
         self.LabelInfo = makeLabel(440, 100, "주문 시작 버튼을 누르고\n 메뉴 이름을 말씀해주세요.", self.PageVoiceMain)
         self.LabelInfo.setGeometry(20, 200, 440, 100)
+        self.LabelAct = makeLabel(250, 80, "", self.PageVoiceMain)
+        self.LabelAct.setGeometry(115, 500, 250, 80)
+        self.img_token = 0
+        self.voiceImgChange()
 
+    def createButtons(self):
         self.BtnBack = makeBtn(50, 50, "홈", self.PageVoiceMain)
         self.BtnBack.setGeometry(10, 40, 50, 50)
         self.BtnBack.clicked.connect(self.close)
@@ -53,27 +65,20 @@ class VoiceOrder(QMainWindow):
         self.BtnActivate.setFlat(1)
         self.BtnActivate.clicked.connect(self.voiceActivate)
 
-        self.LabelAct = makeLabel(250,80,"",self.PageVoiceMain)
-        self.LabelAct.setGeometry(115,500,250,80)
-        self.img_token = 0
-        self.voiceImgChange()
-        fontTitle, fontMiddle, _ = updateFontSize()
-        self.LabelInfo.setFont(fontMiddle)
+    def createOrderSummary(self):
+        self.LabelOrderCountTotal = makeLabel(200, 40, "총 주문 내역 0개", self.PageVoiceMain)
+        self.LabelOrderPriceTotal = makeLabel(100, 40, "0원", self.PageVoiceMain)
+        self.LabelOrderPriceTotal.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.LabelOrderCountTotal.setGeometry(100, 660, 100, 40)
+        self.LabelOrderPriceTotal.setGeometry(340, 660, 100, 40)
 
-        self.LabelOrderCountTotal = makeLabel(200,40,"총 주문 내역 0개",self.PageVoiceMain)
-        self.LabelOrderPriceTotal = makeLabel(100,40,"0원",self.PageVoiceMain)
-        self.LabelOrderPriceTotal.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
-        self.LabelOrderCountTotal.setGeometry(100,660,100,40)
-        self.LabelOrderPriceTotal.setGeometry(340,660,100,40)
+        self.BtnShoppingCart = makeBtn(60, 60, "쇼핑\n카트", self.PageVoiceMain)
+        self.BtnShoppingCart.setGeometry(20, 650, 70, 70)
 
-        self.BtnShoppingCart = makeBtn(60,60,"쇼핑\n카트",self.PageVoiceMain)
-        self.BtnShoppingCart.setGeometry(20,650,70,70)
-
-        self.BtnCancelOrder = makeBtn(210,70,"전체 취소하기",self.PageVoiceMain)
-        self.BtnCancelOrder.setGeometry(20,740,210,70)
-        self.BtnPurchase = makeBtn(210,70,"결제하기",self.PageVoiceMain)
-        self.BtnPurchase.setGeometry(250,740,210,70)
-
+        self.BtnCancelOrder = makeBtn(210, 70, "전체 취소하기", self.PageVoiceMain)
+        self.BtnCancelOrder.setGeometry(20, 740, 210, 70)
+        self.BtnPurchase = makeBtn(210, 70, "결제하기", self.PageVoiceMain)
+        self.BtnPurchase.setGeometry(250, 740, 210, 70)
 
     def voiceActivate(self):
         self.listening = False
@@ -91,14 +96,13 @@ class VoiceOrder(QMainWindow):
                 self.repaint()
                 audio_data = mic.listen(source)
                 try:
-                    user_input = mic.recognize_google(audio_data,language="ko-KR")
+                    user_input = mic.recognize_google(audio_data, language="ko-KR")
                     print(user_input)
                 except sr.UnknownValueError:
                     print("음성 인식 실패")
             self.listening = False
             self.img_token = 0
             self.voiceImgChange()
-
 
     def updateFont(self):
         fontTitle, fontMiddle, fontSmall = updateFontSize()
@@ -121,11 +125,11 @@ class VoiceOrder(QMainWindow):
             fontTitle, fontMiddle, fontSmall = updateFontSize()
             fontTitle.setPointSize(fontTitle.pointSize() - 1)
             fontMiddle.setPointSize(fontMiddle.pointSize() - 1)
-            fontSmall.setPointSize(fontSmall.pointSize() - 1)
+            fontSmall.setPointSize(fontSmall.setPointSize() - 1)
             self.updateFont()
 
     def voiceImgChange(self):
-        if self.img_token == 1 :
+        if self.img_token == 1:
             self.LabelAct.setText("지금 말씀하세요!")
             self.BtnActivate.setStyleSheet(
                 "QPushButton { background-image: url('img/ClientUI/Voice_On.png');"
@@ -133,8 +137,7 @@ class VoiceOrder(QMainWindow):
                 "background-repeat: no-repeat;"
                 "background-size: cover; }"
             )
-
-        elif self.img_token == 0 :
+        elif self.img_token == 0:
             self.LabelAct.setText("주문 시작")
             self.BtnActivate.setStyleSheet(
                 "QPushButton { background-image: url('img/ClientUI/Voice_Off.png');"
