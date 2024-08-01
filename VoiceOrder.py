@@ -125,7 +125,7 @@ class VoiceOrder(QMainWindow):
             fontTitle, fontMiddle, fontSmall = updateFontSize()
             fontTitle.setPointSize(fontTitle.pointSize() - 1)
             fontMiddle.setPointSize(fontMiddle.pointSize() - 1)
-            fontSmall.setPointSize(fontSmall.setPointSize() - 1)
+            fontSmall.setPointSize(fontSmall.pointSize() - 1)
             self.updateFont()
 
     def voiceImgChange(self):
