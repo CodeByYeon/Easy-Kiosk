@@ -5,7 +5,7 @@ from PyQt5.QtGui import QFont
 fontTitle = QFont("SUITE Heavy", 35)
 fontMiddle = QFont("SUITE", 25)
 fontSmall = QFont("SUITE", 16)
-fontCount = 0
+Count = 0
 
 def makeBtn(w, h, text, parents):
     # 버튼 생성하는 함수
@@ -28,10 +28,10 @@ def updateFontSize():
     global fontTitle, fontMiddle, fontSmall
     return fontTitle, fontMiddle, fontSmall
 
-def setFontCount(count):
-    global fontCount
-    fontCount = count
+def setCount(count):
+    global Count
+    Count = count
 
-def getFontCount():
-    global fontCount
-    return fontCount
+def getCount():
+    global Count
+    return Count

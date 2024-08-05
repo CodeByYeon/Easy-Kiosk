@@ -3,7 +3,7 @@ import time
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from utils import makeBtn, makeLabel, updateFontSize, setFontCount, getFontCount
+from utils import makeBtn, makeLabel, updateFontSize, setCount, getCount
 import speech_recognition as sr
 
 class VoiceOrder(QMainWindow):
@@ -109,9 +109,9 @@ class VoiceOrder(QMainWindow):
         self.LabelInfo.setFont(fontMiddle)
 
     def increasefont(self):
-        fontCount = getFontCount()
-        if fontCount < 5:
-            setFontCount(fontCount + 1)
+        Count = getCount()
+        if Count < 5:
+            setCount(Count + 1)
             fontTitle, fontMiddle, fontSmall = updateFontSize()
             fontTitle.setPointSize(fontTitle.pointSize() + 1)
             fontMiddle.setPointSize(fontMiddle.pointSize() + 1)
@@ -119,9 +119,9 @@ class VoiceOrder(QMainWindow):
             self.updateFont()
 
     def decreasefont(self):
-        fontCount = getFontCount()
-        if fontCount > -5:
-            setFontCount(fontCount - 1)
+        Count = getCount()
+        if Count > -5:
+            setCount(Count - 1)
             fontTitle, fontMiddle, fontSmall = updateFontSize()
             fontTitle.setPointSize(fontTitle.pointSize() - 1)
             fontMiddle.setPointSize(fontMiddle.pointSize() - 1)
