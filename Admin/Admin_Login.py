@@ -96,8 +96,9 @@ class Admin_Login(QMainWindow):
             from Admin_Main import Admin_Main
             print("비밀번호가 올바릅니다.")
             self.LabelWrongPW.setHidden(True)
-            main = Admin_Main()
-            main.show()
+            self.main = Admin_Main()
+            self.main.show()
+            self.close()
         else:
             self.LabelWrongPW.setHidden(False)
         self.clearPassword()
