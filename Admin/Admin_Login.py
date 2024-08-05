@@ -2,113 +2,81 @@ import sys
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
-from utils import fontSmall,fontMiddle,fontTitle
+from utils import makeBtn, makeLabel, fontTitle, fontSmall, fontMiddle
 
 class Admin_Login(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('키오스크 관리자')
         self.setWindowFlags(Qt.FramelessWindowHint)
-        self.mainlabelfont = QFont()
-        self.mainlabelfont.setFamily(u"학교안심 우주 R")
-        self.mainlabelfont.setPointSize(28)
-        self.mainlabelfont.setWeight(50)
-
         self.setFixedSize(480, 830)
         self.currentPW = ""
         self.setupUI()
-        self.AdminStackWidget.addWidget(self.PagePW)
 
-    def setupUI(self)  :
-        self.centralwidget = QWidget(self)
-        self.centralwidget.setObjectName("centralwidget")
-        self.centralwidget.setStyleSheet("Background-color: rgb(255, 255, 255);")
-        self.centralwidget.setGeometry(QRect(0,0,400,600))
-        self.AdminStackWidget = QStackedWidget(self.centralwidget)
-        self.AdminStackWidget.setGeometry(QRect(0, 0, 400, 600))
-        self.AdminStackWidget.setCurrentIndex(0)
-        self.setupPWPage()
+    def setupUI(self):
+        self.MainWidget = QWidget(self)
+        self.MainWidget.setStyleSheet("Background-color: rgb(255, 255, 255);")
+        self.MainWidget.setFixedSize(480, 830)
+        self.setCentralWidget(self.MainWidget)
 
-    def setupPWPage(self):
-        self.PagePW = QWidget()
-        self.verticalLayoutWidget_5 = QWidget(self.PagePW)
-        self.verticalLayoutWidget_5.setGeometry(QRect(0, 0, 400, 600))
-        self.LayoutPW = QVBoxLayout(self.verticalLayoutWidget_5)
+        # 라벨을 담기 위한 프레임 생성
+        FramePW = QFrame(self.MainWidget)
+        FramePW.setGeometry(40, 40, 400, 180)
+        self.LayoutPW = QVBoxLayout(FramePW)
         self.LayoutPW.setSpacing(10)
-        self.LayoutPW.setContentsMargins(0, 0, 0, 0)
-        self.FramePW = QFrame(self.verticalLayoutWidget_5)
-        self.FramePW.setFrameShape(QFrame.StyledPanel)
-        self.FramePW.setFrameShadow(QFrame.Raised)
 
-        self.LabelAdmin = QLabel(self.FramePW)
-        self.LabelAdmin.setGeometry(QRect(0, 40, 400, 70))
+        # 라벨 생성
+        self.LabelAdmin = makeLabel(400, 70, "관리자 인증", self.MainWidget)
         self.LabelAdmin.setFont(fontTitle)
-        self.LabelAdmin.setAlignment(Qt.AlignCenter)
-        self.LabelAdmin.setText("관리자 인증")
+        self.LayoutPW.addWidget(self.LabelAdmin, alignment=Qt.AlignCenter)
 
+        # 비밀번호 틀렸을 때 안내 생성
+        self.LabelWrongPW = makeLabel(400, 20, "잘못된 비밀번호입니다. 초기 비밀번호:1234", self.MainWidget)
+        self.LabelWrongPW.setFont(fontSmall)
+        self.LabelWrongPW.setStyleSheet("color: red;")
+        self.LabelWrongPW.setHidden(True)
+        self.LayoutPW.addWidget(self.LabelWrongPW, alignment=Qt.AlignCenter)
+
+        self.LayoutPWForm = QHBoxLayout()
+        self.PWLabels = [makeLabel(40, 70, "○", self.MainWidget) for _ in range(4)]
+        for label in self.PWLabels:
+            label.setFont(fontTitle)
+            label.setAlignment(Qt.AlignCenter)
+            self.LayoutPWForm.addWidget(label)
+
+        self.LayoutPW.addLayout(self.LayoutPWForm)
         self.setupGridLayout()
-        self.setupQuitLabel()
-        self.setupPWLabelButtons()
 
-        self.LayoutPW.addWidget(self.FramePW)
-
-    def setupGridLayout(self):
-        self.gridLayoutWidget_5 = QWidget(self.FramePW)
-        self.gridLayoutWidget_5.setGeometry(QRect(20, 240, 361, 341))
-        self.GridPW = QGridLayout(self.gridLayoutWidget_5)
-        self.GridPW.setSpacing(10)
-        self.GridPW.setContentsMargins(5, 5, 5, 5)
-
-    def setupQuitLabel(self):
-        self.LabelQuit = QPushButton(self.FramePW)
-        self.LabelQuit.setText("✕")
-        self.LabelQuit.setGeometry(QRect(10, 10, 40, 30))
+        self.LabelQuit = makeBtn(40, 30, "✕", self.MainWidget)
         self.LabelQuit.setFont(fontSmall)
         self.LabelQuit.setFlat(True)
         self.LabelQuit.clicked.connect(self.close)
+        self.LabelQuit.setGeometry(10, 40, 30, 30)
 
-    def setupPWLabelButtons(self):
-        self.LabelWrongPW = QLabel(self.FramePW)
-        self.LabelWrongPW.setGeometry(QRect(0, 110, 391, 20))
-        self.LabelWrongPW.setFont(fontSmall)
-        self.LabelWrongPW.setStyleSheet(u"color:red;")
-        self.LabelWrongPW.setAlignment(Qt.AlignCenter)
-        self.LabelWrongPW.setText("잘못된 비밀번호입니다. 초기 비밀번호:1234")
-        self.LabelWrongPW.setHidden(True)
+    def setupGridLayout(self):
+        FrameGrid = QFrame(self.MainWidget)
+        FrameGrid.setGeometry(40, 280, 400, 520)
+        self.GridPW = QGridLayout(FrameGrid)
+        self.GridPW.setSpacing(10)
+        self.GridPW.setContentsMargins(5, 5, 5, 5)
 
-        self.horizontalLayoutWidget_3 = QWidget(self.FramePW)
-        self.horizontalLayoutWidget_3.setGeometry(QRect(29, 140, 340, 80))
-        self.LayoutPWForm = QHBoxLayout(self.horizontalLayoutWidget_3)
-        self.LayoutPWForm.setSpacing(0)
-        self.LayoutPWForm.setContentsMargins(10, 0, 10, 0)
+        self.BtnSubmit = QPushButton(FrameGrid)
+        self.BtnSubmit.setFont(fontMiddle)
+        self.BtnSubmit.setText("입력")
+        self.BtnSubmit.setStyleSheet("background-color:rgb(255, 255, 255);border: 2px solid rgb(0, 0, 0);")
+        self.BtnSubmit.clicked.connect(self.checkPassword)
 
-        self.PWLabels = []
-        for _ in range(4):
-            pw_label = QLabel(self.FramePW)
-            pw_label.setText("○")
-            pw_label.setFont(fontTitle)
-            pw_label.setAlignment(Qt.AlignCenter)
-            self.PWLabels.append(pw_label)
-            self.LayoutPWForm.addWidget(pw_label)
-
+        self.BtnDel = QPushButton(FrameGrid)
+        self.BtnDel.setFont(fontMiddle)
+        self.BtnDel.setText("삭제")
+        self.BtnDel.setStyleSheet("background-color:rgb(255,255,255);border: 2px solid rgb(255, 0, 0);color: red;")
+        self.BtnDel.clicked.connect(self.clearPassword)
+        
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.ButtonSubmit = QPushButton(self.FramePW)
-        self.ButtonSubmit.setFont(fontMiddle)
-        self.ButtonSubmit.setStyleSheet(u"background-color:rgb(255, 255, 255);border: 2px solid rgb(0, 0, 0);")
-        self.ButtonSubmit.setText("입력")
-
-        self.ButtonDel = QPushButton(self.FramePW)
-        self.ButtonDel.setFont(fontMiddle)
-        self.ButtonDel.setStyleSheet(u"background-color:rgb(255,255,255);border: 2px solid rgb(255, 0, 0);color: red;")
-        self.ButtonDel.setText("삭제")
-
-        sizePolicy.setHeightForWidth(self.ButtonDel.sizePolicy().hasHeightForWidth())
-        sizePolicy.setHeightForWidth(self.ButtonSubmit.sizePolicy().hasHeightForWidth())
-        self.ButtonDel.setSizePolicy(sizePolicy)
-        self.ButtonSubmit.setSizePolicy(sizePolicy)
-
-        self.ButtonDel.clicked.connect(self.clearPassword)
-        #self.ButtonSubmit.clicked.connect(self.checkPassword)
+        sizePolicy.setHeightForWidth(self.BtnDel.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(self.BtnSubmit.sizePolicy().hasHeightForWidth())
+        self.BtnDel.setSizePolicy(sizePolicy)
+        self.BtnSubmit.setSizePolicy(sizePolicy)
 
         button_texts = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
         self.buttons = []
@@ -125,23 +93,32 @@ class Admin_Login(QMainWindow):
         positions = [(3, 1), (0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2), (3, 2), (3, 0)]
         for i, button in enumerate(self.buttons):
             button.clicked.connect(lambda _, digit=i: self.addDigit(str(digit)))
-        for widget, (row, col) in zip(self.buttons + [self.ButtonSubmit, self.ButtonDel], positions):
+        for widget, (row, col) in zip(self.buttons + [self.BtnSubmit, self.BtnDel], positions):
             self.GridPW.addWidget(widget, row, col, 1, 1)
 
     def addDigit(self, digit):
-        if len(self.currentPW) < 4:  # 비밀번호 길이 제한
+        if len(self.currentPW) < 4:
             self.currentPW += digit
             self.updatePWDisplay()
 
     def updatePWDisplay(self):
-        for i, _ in enumerate(self.currentPW):
-            self.PWLabels[i].setText("●")  # 입력된 길이만큼 ● 표시
-        for i in range(len(self.currentPW), 4):
-            self.PWLabels[i].setText("○")  # 남은 부분은 ○ 표시
+        for i in range(4):
+            self.PWLabels[i].setText("●" if i < len(self.currentPW) else "○")
 
     def clearPassword(self):
-        self.currentPW = ""  # 현재 입력된 비밀번호 초기화
+        self.currentPW = ""
         self.updatePWDisplay()
+
+    def checkPassword(self):
+        if self.currentPW == "1234":  # 초기 비밀번호 확인
+            from Admin_Main import Admin_Main
+            print("비밀번호가 올바릅니다.")
+            self.LabelWrongPW.setHidden(True)
+            main = Admin_Main()
+            main.show()
+        else:
+            self.LabelWrongPW.setHidden(False)
+        self.clearPassword()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
